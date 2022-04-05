@@ -1,87 +1,64 @@
-import React from 'react';
+import React from "react";
 
 export default function PizzaForm(props) {
-    const {
-        values,
-        setValues,
-        reset,
-    } = props;
+    const {values, update, submit} = props;
 
+    const onChange = (evt) => {
+        const {name, value} = evt.target;
+        update(name, value);
+    }
 
-const onCancel = evt => {
-    evt.preventDefault();
-    reset();
-}
+    const onSubmit = (evt) => {
+        evt.preventDefault();
+        submit();
+    }
 
-const onSubmit = evt => {
-    evt.preventDefault();
-    // submit();
-}
-
-const onChange = evt => {
-    const { name, value } = evt.target
-    setValues({ ...values, [name]: value })
-  }
-
-return (
-    <form>
-        <label>Name
-            <input 
-                type='text'
-                name='name'
-                id='name-input'
-                // value={values.name}
-                // onChange={onChange}
-                placeholder='Enter Name'
-            />
-        </label>
-        <label>Size
-            <select name='size' id='size-input'>
-                <option value='small'>Small</option>
-                <option value='medium'>Medium</option>
-                <option value='large'>Large</option>
-            </select>
-        </label>
-        <label>Toppings
-            <label>Pepperoni
-                <input 
-                    type='checkbox'
-                    name='pepperoni'
-                    id='pepperoni'
-                    // checked={values.pepperoni}
-                />
-            </label>
-            <label>Pineapple
-                <input
-                    type='checkbox'
-                    name='pineapple'
-                    id='pineapple'
-                />
-            </label>
-            <label>Sausage
-                <input 
-                    type='checkbox'
-                    name='sausage'
-                    id='sausage'
-                />
-            </label>
-            <label>Ham
-                <input 
-                    type='checkbox'
-                    name='ham'
-                    id='ham'
-                />
-            </label>
-        </label>
-        <label>Special Instructions?
-            <input 
-                type='text'
-                name='special-text'
-                id='special-text'
-                placeholder='enter here...'
-            />
-        </label>
-        <button id='order-button'>Place Order</button>
-    </form>
-)
+    return (
+        <form id='pizza-form' onSubmit={onSubmit}>
+            <div id='inputs'>
+                <label>Name
+                    <input 
+                        type='text'
+                        id='name-input'
+                        name='name'
+                        value={values.name}
+                        onChange={onChange}
+                    />
+                </label><br />
+                <label>Size
+                    <select 
+                        id='size-dropdown'
+                        name='size'
+                        value={values.size}
+                        onChange={onChange}
+                    >
+                        <option name=''>Please select size...</option>
+                        <option name='small'>Small</option>
+                        <option name='medium'>Medium</option>
+                        <option name='large'>Large</option>
+                    </select>
+                </label><br/>
+                <label>Toppings:
+                    <input type='checkbox' checked={values} id='pepperoni' name='pepperoni' onChange={onChange} />
+                    <label for='pepperoni'>Pepperoni</label>
+                    <input type='checkbox' checked={values} id='sausage' name='sausage' onChange={onChange} />
+                    <label for='sausage'>Sausage</label>
+                    <input type='checkbox' checked={values} id='peppers' name='peppers' onChange={onChange} />
+                    <label for='peppers'>Peppers</label>
+                    <input type='checkbox' checked={values} name='onions' onChange={onChange} />
+                    <label for='onions'>Onions</label>
+                </label><br/>
+                <label>Special Instructions
+                    <input 
+                        type='text'
+                        id='special-text'
+                        name='special'
+                        value={values.special}
+                        onChange={onChange}
+                    />
+                </label>
+                <button>Place Order</button>
+            </div>
+        </form>
+    )
 }
