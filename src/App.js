@@ -16,9 +16,7 @@ const initialValues = {
 }
 
 const initialFormErrors = {
-  name: '',
-  // size: '',
-  // special: ''
+  name: ''
 }
 
 const initialPizzas = [];
@@ -37,27 +35,30 @@ const App = () => {
 
  
 
-  const postNewPizza = newPizza => {
-    axios.post('https://reqres.in/api/orders', newPizza)
-      .then(res => {
-        setPizzas([res.data, ...pizzas]);
-      })
-      .catch(err => {
-        console.error(err);
-      })
-      .finally(() => {
-        setValues(initialValues);
-      })
-      
-  }
+  
 
   const submitForm = () => {
     const newPizza = {
       name: values.name.trim(),
-      size: values.size,
+      size: values.size.trim(),
       toppings: ['pepperoni', 'sausage', 'peppers', 'onions'].filter(topping => !!values[topping]),
-      special: values.special
+      special: values.special.trim()
     }
+
+    const postNewPizza = (testOrder) => {
+      axios.post("https://reqres.in/api/orders", testOrder)
+        .then(res => {
+          setPizzas([res.data, ...pizzas]);
+        })
+        .catch(err => {
+          console.error(err);
+        })
+        .finally(() => {
+          setValues(initialValues);
+        })
+        
+    }
+
     postNewPizza(newPizza);
   }
   
@@ -74,7 +75,7 @@ const App = () => {
 
   
   
-  console.log(pizzas)
+  // console.log(pizzas)
   return (
     <>
       <h1>Lambda Eats</h1>
