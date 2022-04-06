@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import PizzaForm from "./pizzaForm";
 import Pizza from "./pizza";
 import {Switch, Route, Link} from'react-router-dom';
@@ -10,9 +10,10 @@ const initialValues = {
   toppings: '',
   special: ''
 }
+const initialPizzas = [];
 
 const App = () => {
-  const [pizzas, setPizzas] = useState([]);
+  const [pizzas, setPizzas] = useState(initialPizzas);
 
   const [values, setValues] = useState(initialValues);
 
@@ -20,21 +21,14 @@ const App = () => {
     setValues({...values, [inputName]: inputValue});
   }
 
-  const submitForm = () => {
-    const newPizza = {
-      name: values.name.trim(),
-      size: values.size,
-      toppings: values.toppings,
-      special: values.special
-    }
+ 
 
-    if (!newPizza.name || !newPizza.size) return;
-
+  const postNewPizza = newPizza => {
     axios.post('https://reqres.in/api/orders', newPizza)
       .then(res => {
-        console.log(res);
+        setPizzas([res.data,...pizzas])
       })
-      .catch(err => {
+      .catch(err =>{
         console.error(err);
       })
       .finally(() => {
@@ -42,6 +36,21 @@ const App = () => {
       })
   }
 
+  const submitForm = () => {
+    const newPizza = {
+      name: values.name.trim(),
+      size: values.size,
+      toppings: ['pepperoni', 'sausage', 'peppers', 'onions'].filter(topping => !!values[topping]),
+      special: values.special
+    }
+    window.onload(postNewPizza(newPizza));
+  }
+  
+  // useEffect(() => {
+  //   getPizzas();
+  // }, [])
+  
+  console.log(pizzas)
   return (
     <>
       <h1>Lambda Eats</h1>
@@ -53,18 +62,11 @@ const App = () => {
         </Route>
         <Route exact path='/pizza'>
           <h2>Order</h2>
-          <PizzaForm values={values} update={updateForm} submit={submitForm} />
-        </Route>
-        <Route exact path='/myOrder'>
-          <h2>My Order</h2>
+          <PizzaForm values={values} update={updateForm} submit={submitForm} />    
         </Route>
       </Switch>
       
-      {pizzas.map(pizza => {
-        return (
-          <Pizza key={pizza.id} details={pizza} />
-        )
-      })}
+      
     </>
   );
 };

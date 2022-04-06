@@ -4,8 +4,9 @@ export default function PizzaForm(props) {
     const {values, update, submit} = props;
 
     const onChange = (evt) => {
-        const {name, value} = evt.target;
-        update(name, value);
+        const {name, value, checked, type} = evt.target;
+        const valueToUse = type === 'checkbox' ? checked : value;
+        update(name, valueToUse);
     }
 
     const onSubmit = (evt) => {
@@ -39,14 +40,14 @@ export default function PizzaForm(props) {
                     </select>
                 </label><br/>
                 <label>Toppings:
-                    <input type='checkbox' checked={values} id='pepperoni' name='pepperoni' onChange={onChange} />
-                    <label for='pepperoni'>Pepperoni</label>
-                    <input type='checkbox' checked={values} id='sausage' name='sausage' onChange={onChange} />
-                    <label for='sausage'>Sausage</label>
-                    <input type='checkbox' checked={values} id='peppers' name='peppers' onChange={onChange} />
-                    <label for='peppers'>Peppers</label>
-                    <input type='checkbox' checked={values} name='onions' onChange={onChange} />
-                    <label for='onions'>Onions</label>
+                    <input type='checkbox' checked={values.pepperoni} id='pepperoni' name='pepperoni' onChange={onChange} />
+                    <label htmlFor='pepperoni'>Pepperoni</label>
+                    <input type='checkbox' checked={values.sausage} id='sausage' name='sausage' onChange={onChange} />
+                    <label htmlFor='sausage'>Sausage</label>
+                    <input type='checkbox' checked={values.peppers} id='peppers' name='peppers' onChange={onChange} />
+                    <label htmlFor='peppers'>Peppers</label>
+                    <input type='checkbox' checked={values.onions} name='onions' onChange={onChange} />
+                    <label htmlFor='onions'>Onions</label>
                 </label><br/>
                 <label>Special Instructions
                     <input 

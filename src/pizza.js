@@ -5,8 +5,16 @@ const Pizza = (props) => {
         <Pizza>
             <h4>Pizza for {props.name}</h4>
             <p>Size: {props.size}</p>
-            <p>Toppings: {props.toppings}</p>
-            <p>Special Instructions: {props.specialText}</p>
+            {
+        !!props.toppings && !!props.toppings.length &&
+        <div>
+          Toppings:
+          <ul>
+            {props.toppings.map((like, idx) => <li key={idx}>{like}</li>)}
+          </ul>
+        </div>
+      }
+            <p>Special Instructions: {props.special}</p>
         </Pizza>
     )
 }
