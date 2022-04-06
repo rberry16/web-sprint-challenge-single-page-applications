@@ -17,8 +17,8 @@ const initialValues = {
 
 const initialFormErrors = {
   name: '',
-  size: '',
-  special: ''
+  // size: '',
+  // special: ''
 }
 
 const initialPizzas = [];
@@ -40,14 +40,15 @@ const App = () => {
   const postNewPizza = newPizza => {
     axios.post('https://reqres.in/api/orders', newPizza)
       .then(res => {
-        setPizzas([res.data,...pizzas])
+        setPizzas([res.data, ...pizzas]);
       })
-      .catch(err =>{
+      .catch(err => {
         console.error(err);
       })
       .finally(() => {
         setValues(initialValues);
       })
+      
   }
 
   const submitForm = () => {
@@ -57,7 +58,7 @@ const App = () => {
       toppings: ['pepperoni', 'sausage', 'peppers', 'onions'].filter(topping => !!values[topping]),
       special: values.special
     }
-    window.onload(postNewPizza(newPizza));
+    postNewPizza(newPizza);
   }
   
   const validate = (name, value) => {
