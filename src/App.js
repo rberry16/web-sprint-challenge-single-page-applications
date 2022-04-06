@@ -1,24 +1,38 @@
 import React, {useState, useEffect} from "react";
 import PizzaForm from "./pizzaForm";
-import Pizza from "./pizza";
+import * as yup from 'yup';
 import {Switch, Route, Link} from'react-router-dom';
 import axios from "axios";
+import schema from "./formSchema";
 
 const initialValues = {
   name: '',
   size: '',
-  toppings: '',
+  pepperoni: false,
+  sausage: false,
+  peppers: false,
+  onions: false,
   special: ''
 }
+
+const initialFormErrors = {
+  name: '',
+  size: '',
+  special: ''
+}
+
 const initialPizzas = [];
+const initialDisabled = true;
 
 const App = () => {
   const [pizzas, setPizzas] = useState(initialPizzas);
-
   const [values, setValues] = useState(initialValues);
+  const [formErrors, setFormErrors] = useState(initialFormErrors);
+  const [disabled, setDisabled] = useState(initialDisabled);   
 
   const updateForm = (inputName, inputValue) => {
     setValues({...values, [inputName]: inputValue});
+    validate(inputName, inputValue);
   }
 
  
@@ -46,9 +60,18 @@ const App = () => {
     window.onload(postNewPizza(newPizza));
   }
   
-  // useEffect(() => {
-  //   getPizzas();
-  // }, [])
+  const validate = (name, value) => {
+    yup.reach(schema, name)
+      .validate(value)
+        .then(() => setFormErrors({...formErrors, [name]: ''}))
+        .catch(err => setFormErrors({...formErrors, [name]: err.errors[0]}))
+  }
+
+  useEffect(() => {
+    schema.isValid(values).then(valid => setDisabled(!valid));
+  }, [values])
+
+  
   
   console.log(pizzas)
   return (
@@ -62,7 +85,7 @@ const App = () => {
         </Route>
         <Route exact path='/pizza'>
           <h2>Order</h2>
-          <PizzaForm values={values} update={updateForm} submit={submitForm} />    
+          <PizzaForm values={values} update={updateForm} submit={submitForm} disabled={disabled} errors={formErrors} />    
         </Route>
       </Switch>
       
