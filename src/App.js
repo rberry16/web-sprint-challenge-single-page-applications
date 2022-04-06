@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import PizzaForm from "./pizzaForm";
 import Pizza from "./pizza";
 import {Switch, Route, Link} from'react-router-dom';
+import axios from "axios";
 
 const initialValues = {
   name: '',
@@ -29,7 +30,16 @@ const App = () => {
 
     if (!newPizza.name || !newPizza.size) return;
 
-    setPizzas(newPizza,{...pizzas})
+    axios.post('https://reqres.in/api/orders', newPizza)
+      .then(res => {
+        console.log(res);
+      })
+      .catch(err => {
+        console.error(err);
+      })
+      .finally(() => {
+        setValues(initialValues);
+      })
   }
 
   return (
@@ -39,9 +49,9 @@ const App = () => {
       <Switch>
         <Route exact path='/'>
           <h2>Home</h2>
-          <Link to='/order' id='order-pizza'>Order Here</Link>
+          <Link to='/pizza' id='order-pizza'>Order Here</Link>
         </Route>
-        <Route exact path='/order'>
+        <Route exact path='/pizza'>
           <h2>Order</h2>
           <PizzaForm values={values} update={updateForm} submit={submitForm} />
         </Route>
